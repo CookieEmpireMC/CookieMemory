@@ -1,0 +1,14 @@
+{
+  "name": "cookie-memory",
+  "owner": {
+    "name": "CookieEmpireMC"
+  },
+  "description": "The Cookie Empire team: shared agents, skills, hooks and game knowledge.",
+  "plugins": [
+    {
+      "name": "bakery-team",
+      "source": "./plugins/bakery-team",
+      "description": "Rick's bakery team (7 agents), the /bakery-team:feature workflow, the ownership hook, and the game design."
+    }
+  ]
+}

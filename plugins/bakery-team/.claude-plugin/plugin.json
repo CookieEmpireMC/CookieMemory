@@ -1,0 +1,8 @@
+{
+  "name": "bakery-team",
+  "description": "Cookie Empire agent team, feature workflow, ownership hook and shared game knowledge.",
+  "author": {
+    "name": "CookieEmpireMC"
+  },
+  "repository": "https://github.com/CookieEmpireMC/CookieMemory"
+}
