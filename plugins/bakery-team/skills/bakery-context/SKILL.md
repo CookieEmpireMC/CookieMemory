@@ -24,6 +24,7 @@ Every repo keeps its own development memory: `.claude/agent-memory/bakery-team-<
 | `balance-designer` | economy numbers, formula contract, pacing simulator and reports | `buildings.yml`, `upgrades.yml`, `tools/balance/`, `docs/balance/` |
 | `plugin-coder` | implements features | `src/main/` except designer-owned files, `pom.xml`, `plugin.yml`, other config |
 | `plugin-tester` | writes/runs tests, reviews architecture, gives a merge verdict | `src/test/`, `docs/reviews/`, `docs/architecture.md` |
+| `repo-watcher` | fetches every Cookie Empire repo, fast-forwards local branches that are safely behind, reports what was pushed (also runs at session start as a hook) | nothing (read-only apart from git fetch/fast-forward) |
 
 ### The team (git identities)
 
@@ -39,6 +40,7 @@ Everyone commits under their own name, per commit (`git -c user.name=… -c user
 | sound-designer | Bassboost Bruno | bruno@bakery.invalid | every click deserves a drop |
 | vfx-designer | Flare Larry | larry@bakery.invalid | if it doesn't sparkle, it isn't done |
 | balance-designer | Stonks Stan | stan@bakery.invalid | number go up (on schedule) |
+| repo-watcher | Gossip Gus | gus@bakery.invalid | did you hear what got pushed? |
 
 The orchestrator commits as Rickroll Rick (`git -c user.name="Rickroll Rick" -c user.email="rick@bakery.invalid" …`), including research notes and integration reviews on behalf of agents without a shell or branch (credited with `--author`). Rick merges agent branches into the feature branch and opens the pull request; **only the user merges into `main`**.
 
