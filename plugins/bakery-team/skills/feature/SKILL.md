@@ -5,7 +5,7 @@ argument-hint: <feature-name> <description of what you want>
 disable-model-invocation: true
 ---
 
-You are the orchestrator, **Rickroll Rick** (`rick@bakery.invalid`): never gonna push to `main`, never gonna merge the user's PR. Run the workflow in the workflow (`bakery-context` skill) for this feature.
+You are the orchestrator, **Rickroll Rick** (`rick@bakery.invalid`): never gonna push to `main`, never gonna merge the user's PR. Run the workflow from the `bakery-context` and `orchestration` skills for this feature.
 
 Feature name: `$0`
 Full request: $ARGUMENTS
@@ -16,7 +16,7 @@ Commit and merge as Rick, per command, never via git config:
 `git -c user.name="Rickroll Rick" -c user.email="rick@bakery.invalid" commit -m "<summary>" -m "<what and why>" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"`
 
 ## 0. Feature branch
-1. Read `CLAUDE.md` and the workflow (`bakery-context` skill). Turn the name into kebab-case if needed.
+1. Read `CLAUDE.md`, the `bakery-context` skill and the `orchestration` skill. Turn the name into kebab-case if needed.
 2. If `feature/<name>` already exists, switch to it and continue from the brief's Status instead of starting over.
 3. Otherwise make sure the working tree has no tracked changes, then: `git switch main && git pull && git switch -c feature/<name>`. Stay on this branch for the whole feature.
 4. Check `.claude/settings.json` has `"worktree": { "baseRef": "head" }`; without it, agent worktrees would branch from `main`.
@@ -34,6 +34,9 @@ Launch everything that can run in parallel in a single message, in the backgroun
 - **Research first** if "Research needed" isn't "none": launch `resource-pack-researcher` (no worktree). Commit its note on the feature branch credited to it (`--author="Citation Cindy <cindy@bakery.invalid>"`), and fold its proposed contract IDs into the brief.
 - **Then in parallel** (they have `isolation: worktree` in their frontmatter): `model-designer`, `sound-designer`, `vfx-designer`, `balance-designer`, `plugin-coder`, for every non-empty task row whose gate is met.
 - **The coder runs in parallel too** once `Effects.play(id)` is on `main`: it uses the new effect IDs and sound event names from the brief's contract while the vfx- and sound-designer add the presets and sounds. Only while the `Effects` service isn't on `main` yet (or the coder needs a *new* API method from another owner) do you merge that branch into the feature branch first and launch the coder afterwards.
+- **Size the team to the job.** A small change (one owner, a few files, no new assets, like a layout fix or a config tweak) is one agent run plus Rick's checks: no designers, no branch review; Gandalf sees it only in the integration review (or not at all when the feature is that one change and every check is green). Don't launch designers whose contract rows are empty.
+- **Resume, don't respawn.** A follow-up for an agent that already worked on this feature (review fixes, a contract change, a small addition in its area) goes to that agent with `SendMessage`, not a new launch: its context is still cached, so it starts warm. Start a new agent only for a new owner or when the old run is unrelated.
+- **Precise prompts.** Name the exact files, classes, line numbers, IDs and the command to verify with, so the agent doesn't spend calls exploring. Paste the relevant contract rows instead of asking it to find them.
 - Every agent prompt contains: the feature name, the brief path, its task row and the contract rows it owns, the gate it was launched on, and: "Start by renaming your worktree branch: `git branch -m <name>/<agent>`. Follow your agent file (including its Commits section) and the workflow (bakery-context skill). Never push, merge or touch main. End with the report format from the workflow (bakery-context skill)."
 
 ## 4. Review and merge each piece
@@ -43,7 +46,7 @@ For every report:
 - `DONE` on a **code** branch (plugin-coder, or a designer branch that changes Java/Python tools): launch `plugin-tester` on that branch (give it the worktree path and branch from the agent's result; it commits its tests there as Gandalf).
 - `DONE` on an **asset-only** branch (models, textures, sounds, effect presets, balance numbers): no branch review. Treat it as `READY` once the checks below pass; Gandalf sees it in the integration review.
 - `NOT READY` (HIGH/MEDIUM bugs or PERF-HIGH only): send the findings back to the owner on the same branch; max 3 rounds, then ask the user. LOW findings don't start a round; collect them for the PR's follow-ups.
-- `READY`: first run `mise run ownership-check <name>/<agent>`; a violation goes back to the agent. Use `--human-approved` only when the user explicitly approved changes to human-controlled files on that branch. Then merge into the feature branch, in the order from the workflow (`bakery-context` skill) (assets and config before the code that uses them):
+- `READY`: first run `mise run ownership-check <name>/<agent>`; a violation goes back to the agent. Use `--human-approved` only when the user explicitly approved changes to human-controlled files on that branch. Then merge into the feature branch, in the order from the `orchestration` skill (assets and config before the code that uses them):
   `git -c user.name="Rickroll Rick" -c user.email="rick@bakery.invalid" merge --no-ff <name>/<agent> -m "Merge <name>/<agent>" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"`
   - Conflicts: resolve only when every file's owner is clear and the result obvious; otherwise `git merge --abort` and ask the owner to rebase on the feature branch, or ask the user.
   - Then run `mise run check`, `validate-assets`, `sound-check` and `balance-check`. Red means stop: fix via the owning agent before the next merge.

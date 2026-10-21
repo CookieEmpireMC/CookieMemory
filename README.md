@@ -6,8 +6,9 @@ The shared brain of the **Cookie Empire** team (`CookieEmpireMC`). It is a Claud
 |---|---|
 | `plugins/bakery-team/agents/` | the 8 agents (`bakery-team:plugin-coder`, `bakery-team:plugin-tester`, `bakery-team:model-designer`, `bakery-team:sound-designer`, `bakery-team:vfx-designer`, `bakery-team:balance-designer`, `bakery-team:resource-pack-researcher`, `bakery-team:repo-watcher`) |
 | `plugins/bakery-team/skills/feature/` | `/bakery-team:feature <name> <description>`: one feature end to end |
-| `plugins/bakery-team/skills/bakery-context/` | team, git identities, ownership, workflow, ground rules (preloaded by every agent) |
-| `plugins/bakery-team/skills/game-design/` | the game design document (preloaded by every agent) |
+| `plugins/bakery-team/skills/bakery-context/` | team, git identities, ownership, gates, report format, token budget, ground rules (preloaded by every agent) |
+| `plugins/bakery-team/skills/orchestration/` | Rick's part: branches, phases, merging, fix loop, PR, ownership enforcement (loaded by the `feature` skill, not by agents) |
+| `plugins/bakery-team/skills/game-design/` | the game design document: a short summary (preloaded by every agent) and the full text in `gdd.md` (read per section when needed) |
 | `plugins/bakery-team/skills/token-report/` | `/bakery-team:token-report`: tokens per agent, feature or run |
 | `plugins/bakery-team/scripts/token_usage.py` | records and reports token usage (also run by the SubagentStop/SessionEnd hook) |
 | `plugins/bakery-team/skills/repo-news/` | `/bakery-team:repo-news`: what was pushed to the Cookie Empire repos since you last looked |
@@ -30,6 +31,8 @@ Add to the repo's `.claude/settings.json`:
 Then open the repo in Claude Code and trust the folder. The repo is private, so git must be able to reach GitHub: an SSH key, or `gh auth login && gh auth setup-git` (then set `CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1`). If the plugin doesn't show up, run `/plugin install bakery-team@cookie-memory`.
 
 ## Change the team or the game design
+The full game design is `plugins/bakery-team/skills/game-design/gdd.md`; when you change it, update the summary in that skill's `SKILL.md` too.
+
 1. Branch, edit, run `python tools/check_plugin.py`, open a PR. The user reviews and merges.
 2. There is no `version` field, so every merged commit is a new version. With `autoUpdate` it arrives on the next session; otherwise run `/plugin marketplace update cookie-memory`, then `/reload-plugins`.
 3. Test before merging: `claude --plugin-dir ./plugins/bakery-team` in a repo.
