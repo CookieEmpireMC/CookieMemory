@@ -8,7 +8,7 @@
     {
       "name": "bakery-team",
       "source": "./plugins/bakery-team",
-      "description": "Rick's bakery team (7 agents), the /bakery-team:feature workflow, the ownership hook, and the game design."
+      "description": "Rick's bakery team (8 agents), the /bakery-team:feature workflow, the ownership hook, the repo watch, and the game design."
     }
   ]
 }
