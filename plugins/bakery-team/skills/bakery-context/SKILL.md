@@ -77,7 +77,7 @@ Branches, the phases of a feature, merging, the fix loop, the pull request and h
 
 ## Ground rules
 
-- The target is **Paper 26.3** (Java 25); follow `docs/paper-26x-reference.md`. If `pom.xml` is on another version, stop and report it.
+- The target is **Paper 26.x** (Java 25), with the exact minor version (26.1, 26.2, 26.3, …) from the `paper-api` version in `pom.xml`. Follow `docs/paper-26x-reference.md`, and use only API, pack formats and features that exist in that minor version. If `pom.xml` isn't on 26.x, stop and report it.
 - Java, Maven and Python are pinned in `mise.toml` (Java 25). Build with `mise run build`, test with `mise run test`, full check with `mise run check`, check assets with `mise run validate-assets` and `mise run sound-check`, check pacing with `mise run balance-check`, zip the pack with `mise run pack`. Never run plain `mvn`; use `mise exec -- mvn …`. CI (`.github/workflows/ci.yml`) runs `check`, `validate-assets`, `sound-check` and `balance-check` on every push and PR, so run them locally before handing work back.
 - Never shade Paper, Adventure/MiniMessage, ItemsAdder or ModelEngine; they use `provided` scope.
 - Never hardcode sounds or particles in code: sounds go through `sounds.yml` events, effects through `Effects.play(id)`.
