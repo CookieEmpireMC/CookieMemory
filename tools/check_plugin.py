@@ -4,7 +4,7 @@ import json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLUGIN = os.path.join(ROOT, "plugins", "bakery-team")
-AGENT_FIELDS = {"name", "description", "tools", "model", "isolation", "memory", "skills", "color"}
+AGENT_FIELDS = {"name", "description", "tools", "model", "effort", "isolation", "memory", "skills", "color"}
 problems = []
 
 

@@ -17,7 +17,10 @@ Spend tokens where they catch real problems:
 - **No fix round for LOWs:** only HIGH/MEDIUM bugs and PERF-HIGH go back to the owner. LOW findings become PR follow-ups.
 - **Small jobs, small teams:** a change with one owner and a few files is one agent run plus checks, without designers or a branch review. Follow-ups for an agent that already worked on the feature go back to it (resumed, context still cached) instead of a new launch.
 - **Quiet checks:** during your work run `mise run check-quiet` when the repo has it (it prints only the result and failures), not `mise run check`, and pipe other long outputs through `tail`/`grep`. Every line you read stays in your context and is paid for on every later call.
+- **Batch independent steps:** every time you stop to look at a tool result, the whole context is read again. When the next reads, searches or commands don't depend on each other's results (reading 3 files, running 2 checks), issue them together in one step. Only wait for a result when the next step needs it.
 - **Read narrowly:** open the files and sections you need (with `offset`/`limit` or `grep -n`), not whole directories or files; reuse your memory instead of rediscovering.
+- **Split big code work:** a big feature gets 2–3 plugin-coder runs in parallel on separate parts instead of one long run (a run's cost grows faster than its length, because every call re-reads everything before it). See "Parallel coders" in the `orchestration` skill.
+- **Quality first:** these rules cut repeated reading, not thinking. When a task needs the full GDD section, a reference doc, the Javadocs or a closer look at code, read it.
 - **Measure:** every run's tokens are recorded per machine (SubagentStop/SessionEnd hook). `/bakery-team:token-report` shows them per agent, feature or run, and every feature PR gets a "Token usage" table.
 
 ## Memory
@@ -74,8 +77,8 @@ Branches, the phases of a feature, merging, the fix loop, the pull request and h
 
 ## Ground rules
 
-- Detect the target version from `pom.xml` first, and follow only that version's reference.
-- Java, Maven and Python are pinned in `mise.toml` (Java 21 for 1.21.x, Java 25 for 26.x). Build with `mise run build`, test with `mise run test`, full check with `mise run check`, check assets with `mise run validate-assets` and `mise run sound-check`, check pacing with `mise run balance-check`, zip the pack with `mise run pack`. Never run plain `mvn`; use `mise exec -- mvn …`. CI (`.github/workflows/ci.yml`) runs `check`, `validate-assets`, `sound-check` and `balance-check` on every push and PR, so run them locally before handing work back.
+- The target is **Paper 26.3** (Java 25); follow `docs/paper-26x-reference.md`. If `pom.xml` is on another version, stop and report it.
+- Java, Maven and Python are pinned in `mise.toml` (Java 25). Build with `mise run build`, test with `mise run test`, full check with `mise run check`, check assets with `mise run validate-assets` and `mise run sound-check`, check pacing with `mise run balance-check`, zip the pack with `mise run pack`. Never run plain `mvn`; use `mise exec -- mvn …`. CI (`.github/workflows/ci.yml`) runs `check`, `validate-assets`, `sound-check` and `balance-check` on every push and PR, so run them locally before handing work back.
 - Never shade Paper, Adventure/MiniMessage, ItemsAdder or ModelEngine; they use `provided` scope.
 - Never hardcode sounds or particles in code: sounds go through `sounds.yml` events, effects through `Effects.play(id)`.
 - Never set balance values in code: costs, CPS, multipliers and unlocks come only from `buildings.yml` / `upgrades.yml`, with the maths from `docs/balance/model.md`.

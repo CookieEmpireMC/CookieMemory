@@ -103,3 +103,15 @@ After every merge, run `mise run check`, `mise run validate-assets`, `mise run s
 - **Rick never `cd`s into a worktree.** Changing directory into an agent's worktree moves the whole session there (isolation then blocks edits to the main checkout, and new agent worktrees would branch from the wrong `HEAD`). For anything inside an agent worktree he uses `git -C <path> …` and `mise -C <path> run …` (or `--cd`), and stays in the main checkout on the feature branch.
 
 ---
+
+## Parallel coders (split big code work)
+One long coder run is the most expensive thing in a feature: every call re-reads all earlier calls, so 2 runs of 35 calls cost far less than 1 run of 70 (conveyor-belt: the 73-call belt+camera run used 15.6M tokens, the 16-call panel run 1.4M).
+- **When to split:** the code work touches roughly 8–10+ files, or has 2+ separable player-facing parts. Below that, one coder.
+- **How:** in the brief's Tasks table, give each part its own row, `plugin-coder (<part>)`, with the packages and files it owns, its contract rows, and branch `<name>/plugin-coder-<part>`. Parts must not change the same files. Max 3 coders.
+- **Shared code first:** if parts need a new shared type, config section, plots.yml field or service wiring (e.g. `CookieClicker.java`, `PluginSettings`, `config.yml`), give that to one part (or a short first run), merge it, then launch the others from the updated feature branch.
+- **Same identity:** every part commits as Works4Me Wesly, and `ownership-check` treats them alike. Gandalf reviews each part branch (they are code), and the integration review covers how the parts fit together.
+- **Merge order:** the shared part first, then the others one at a time, with the checks after each.
+
+## Reviewer model
+Gandalf runs on haiku (effort high) for branch reviews and tests. Launch the **integration review** with `model: "sonnet"` (Agent tool override): it is the one review that sees the whole feature, so it gets the stronger model.
+
