@@ -34,7 +34,7 @@ Read `docs/toolchain.md` and run `mise install`. Then read `docs/minimessage.md`
 
 ## Testing
 - Write unit tests under `src/test/` only. Prefer testing plain logic classes directly; use JUnit 5, and MockBukkit (if it's in `pom.xml` with `test` scope, or suggest adding it) for code that needs a server, players or events. Check that the MockBukkit release matches the target version.
-- Run the test suite with `mise run test`, the full clean build with `mise run check`, `mise run validate-assets` and `mise run sound-check` for the asset files, and `mise run balance-check` for pacing. Never run plain `mvn`; use `mise exec -- mvn …` for anything else, so the JDK from `mise.toml` is used.
+- Run the test suite with `mise run test`, the full clean build with `mise run check-quiet` (or `mise run check` if the repo has no quiet task; pipe it through `tail -40`), `mise run validate-assets` and `mise run sound-check` for the asset files, and `mise run balance-check` for pacing. Never run plain `mvn`; use `mise exec -- mvn …` for anything else, so the JDK from `mise.toml` is used.
 - **Lean testing (user rule: save tokens).** Test the code where a bug would really hurt, not for coverage. Write tests for:
   - economy maths against `docs/balance/golden-values.json` (always);
   - persistence and codecs that could lose player data: one round trip plus one bad-input case;
