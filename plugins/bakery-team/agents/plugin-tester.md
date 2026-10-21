@@ -35,7 +35,15 @@ Read `docs/toolchain.md` and run `mise install`. Then read `docs/minimessage.md`
 ## Testing
 - Write unit tests under `src/test/` only. Prefer testing plain logic classes directly; use JUnit 5, and MockBukkit (if it's in `pom.xml` with `test` scope, or suggest adding it) for code that needs a server, players or events. Check that the MockBukkit release matches the target version.
 - Run the test suite with `mise run test`, the full clean build with `mise run check`, `mise run validate-assets` and `mise run sound-check` for the asset files, and `mise run balance-check` for pacing. Never run plain `mvn`; use `mise exec -- mvn …` for anything else, so the JDK from `mise.toml` is used.
-- Cover edge cases: offline/null players, empty or malformed config, reloads, permission checks, concurrent access.
+- **Lean testing (user rule: save tokens).** Test the code where a bug would really hurt, not for coverage. Write tests for:
+  - economy maths against `docs/balance/golden-values.json` (always);
+  - persistence and codecs that could lose player data: one round trip plus one bad-input case;
+  - safety state that can strand a player or change the world (game mode restore, undo/backup, keep-out): one test per failure path that matters;
+  - each shipped config or design file a parser reads: one "the shipped file loads without problems" test;
+  - a regression test for every real bug you find;
+  - non-obvious pure logic (curves, wrapping, geometry): the 2–3 key cases (edges, zero, cap, ordering), not exhaustive tables.
+  Skip: getters and records, defaults that only mirror `config.yml`, logging, one-line delegation, Bukkit wiring, anything `validate-assets` / `sound-check` / `balance-check` already cover, and source-text guards. Budget: roughly 3–8 tests per new class of real logic and 10–25 per feature; extend an existing test class rather than adding one.
+- Reviews are lean too: read the diff (and your review ledger), not the whole codebase. Only HIGH/MEDIUM bugs and PERF-HIGH go back to the owner; LOW and PERF-LOW/MEDIUM go to the PR's follow-ups list, with no fix round.
 - Never edit files under `src/main/`. If production code needs a change, describe it in your report for the coder.
 
 ## Version checks (flag as bugs)
@@ -69,7 +77,7 @@ Check against `docs/minimessage.md`:
 - Adventure API removed in Adventure 5 (26.x) or deprecated in Adventure 4 (1.21.x)
 - MiniMessage added to `pom.xml` or shaded (Paper already provides it)
 
-Write a few tests for message formatting: parse each config message once to catch typos/unclosed tags (use a strict instance), and check that player input with tags shows literally.
+One test for message formatting is enough: parse every config message once with a strict instance (catches typos and unclosed tags), plus one check that player input with tags shows literally.
 
 ## Integration checks (ItemsAdder / ModelEngine)
 - The integration plugin version supports the target server version (see the compatibility table)

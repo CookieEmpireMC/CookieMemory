@@ -13,4 +13,4 @@ jobs:
       - name: Check marketplace, plugin and agents
         run: python tools/check_plugin.py
       - name: Hook compiles
-        run: python -m py_compile plugins/bakery-team/hooks/ownership.py plugins/bakery-team/hooks/ownership_lib.py plugins/bakery-team/hooks/repo_watch.py
+        run: python -m py_compile plugins/bakery-team/hooks/ownership.py plugins/bakery-team/hooks/ownership_lib.py plugins/bakery-team/hooks/repo_watch.py plugins/bakery-team/scripts/token_usage.py

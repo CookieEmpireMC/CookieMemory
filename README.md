@@ -8,6 +8,8 @@ The shared brain of the **Cookie Empire** team (`CookieEmpireMC`). It is a Claud
 | `plugins/bakery-team/skills/feature/` | `/bakery-team:feature <name> <description>`: one feature end to end |
 | `plugins/bakery-team/skills/bakery-context/` | team, git identities, ownership, workflow, ground rules (preloaded by every agent) |
 | `plugins/bakery-team/skills/game-design/` | the game design document (preloaded by every agent) |
+| `plugins/bakery-team/skills/token-report/` | `/bakery-team:token-report`: tokens per agent, feature or run |
+| `plugins/bakery-team/scripts/token_usage.py` | records and reports token usage (also run by the SubagentStop/SessionEnd hook) |
 | `plugins/bakery-team/skills/repo-news/` | `/bakery-team:repo-news`: what was pushed to the Cookie Empire repos since you last looked |
 | `plugins/bakery-team/hooks/` | the ownership hook (denies edits outside an agent's paths, reading the **repo's** `.claude/ownership.json`) and the repo watch (`repo_watch.py`, below) |
 | `tools/check_plugin.py` | the CI check |
@@ -40,3 +42,26 @@ Every time a Claude Code session starts in a Cookie Empire repo, the `SessionSta
 4. when CookieMemory `main` changed, reminds you that the team and the game design update on the next session (`autoUpdate`), or now with `/plugin marketplace update cookie-memory` and then `/reload-plugins`.
 
 The first run only records what's there. During a long session, run `/bakery-team:repo-news` (Gossip Gus, the `repo-watcher` agent, explains what changed and whether it affects your work), or keep it going with `/loop 15m /bakery-team:repo-news`. By hand: `python3 plugins/bakery-team/hooks/repo_watch.py --text` (`--peek` doesn't mark anything as seen or pull).
+
+## Token usage: where do the tokens go?
+Claude Code keeps a transcript of every session and subagent. When an agent finishes (`SubagentStop`) or a session ends (`SessionEnd`), `scripts/token_usage.py --hook` adds that session's runs to a ledger on your machine (`~/.local/state/cookie-empire/token-usage.json`), so the numbers survive Claude Code's transcript cleanup.
+
+- `/bakery-team:token-report`, or by hand:
+  - `python3 plugins/bakery-team/scripts/token_usage.py report --by agent|feature|run [--feature NAME] [--repo NAME] [--since YYYY-MM-DD]`
+- Every feature PR gets a **Token usage** table (per agent), so you and your friend can compare features on GitHub.
+- **Columns:**
+  - API calls and tool uses.
+  - Input (uncached), cache write, cache read, output.
+  - **Weighted**: the input-token equivalent with the API's relative prices (cache write 1.25×, cache read 0.1×, output 5×). Use it to rank costs within one model; across models, also look at the model column.
+- **Grouping:**
+  - Each subagent run is counted under the feature from its prompt ("Feature `x`") or its branch.
+  - The main session (Rick) is split by the `feature/*` branch it was on.
+  - Usage on other branches shows as feature `-`.
+
+The ledger is per machine; your friend's runs are in theirs.
+
+## Token budget rules
+The workflow (`bakery-context` → "Token budget") keeps tests and reviews lean:
+- Only important code is tested.
+- Asset-only branches skip Gandalf's branch review.
+- LOW findings go to follow-ups instead of a fix round.
