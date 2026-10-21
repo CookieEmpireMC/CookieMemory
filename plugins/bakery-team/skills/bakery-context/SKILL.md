@@ -10,6 +10,13 @@ Shared by every repo in `CookieEmpireMC` that enables the `bakery-team` plugin. 
 ## Working style (user rule)
 Be decisive: one solid attempt, one check/review pass, fix only real failures, then commit and report. No repeated redesign or re-planning loops.
 
+## Token budget (user rule)
+Spend tokens where they catch real problems:
+- **Lean tests:** only the important code (economy maths, data that could be lost, player/world safety, shipped-file loading, regressions for real bugs). No coverage chasing. Details are in the plugin-tester agent.
+- **Lean reviews:** Gandalf reviews **code** branches: plugin-coder, and designer branches that change Java or Python tools. Rick merges **asset-only** branches (models, textures, sounds, effect presets, balance numbers) after `ownership-check` and the asset checks, without a branch review; Gandalf sees them once in the integration review.
+- **No fix round for LOWs:** only HIGH/MEDIUM bugs and PERF-HIGH go back to the owner. LOW findings become PR follow-ups.
+- **Measure:** every run's tokens are recorded per machine (SubagentStop/SessionEnd hook). `/bakery-team:token-report` shows them per agent, feature or run, and every feature PR gets a "Token usage" table.
+
 ## Memory
 Every repo keeps its own development memory: `.claude/agent-memory/bakery-team-<agent>/` per agent (plugin agents run as `bakery-team:<agent>`; Claude Code turns the ':' into '-' for the folder), `docs/briefs/`, `docs/reviews/`, `docs/architecture.md`. Write what is specific to the repo there. Shared knowledge (this file, the `game-design` skill, the agents) changes only through a pull request on `CookieEmpireMC/CookieMemory` that the user merges.
 
@@ -66,8 +73,8 @@ Run a feature with **`/bakery-team:feature <name> <description>`** (`.claude/ski
 1. **Branch:** Rickroll Rick (the main session) runs `git switch main && git pull && git switch -c feature/<name>` and stays on it, in the main checkout. He **never `cd`s into an agent worktree** (that moves the whole session); he uses `git -C <path>` and `mise -C <path> run …` / `--cd` instead.
 2. **Brief:** drafts `docs/briefs/<name>.md` from the template, waits for the user's approval, commits it on the feature branch.
 3. **Agents:** researcher first if needed; then model-designer, sound-designer, vfx-designer, balance-designer and coder in parallel (the coder uses new effect IDs and sound events from the brief while the designers add them; it waits only for a Java API that isn't on `main` yet, like the first `Effects` service), each in its own worktree **branched from the feature branch** (`.claude/settings.json`: `"worktree": { "baseRef": "head" }`), on branch `<name>/<agent>`, committing with its own identity. Agents never push, merge or touch `main`.
-4. **Review + merge:** Gandalf reviews each agent branch; Rick runs `mise run ownership-check <name>/<agent>` (a violation goes back to the agent), merges `READY` branches into the feature branch with `git merge --no-ff` (assets and config before code), runs `check`, `validate-assets`, `sound-check` and `balance-check` after each merge, sends red checks back to the owner, resolves conflicts only where the owner is clear, then removes the merged worktree and branch (`git branch -d <name>/<agent>`, `git worktree prune`). Leftover `<name>/*` branches or worktrees are listed in the final summary.
-5. **Pull request:** after Gandalf's integration review, Rick checks `gh auth status`, pushes `feature/<name>` (only `feature/*`, never force), and opens a PR **as `cookie-bakery[bot]`** with `mise run pr-open` (so the user can approve it; `main` requires 1 approval and the `check` job), filled from `.github/pull_request_template.md`: ready when everything is green and `READY`, otherwise draft with the open issues. He waits for CI with `gh pr checks --watch`, fixes failures through the owners, **opens the PR in the user's browser automatically** (`gh pr view --web`) once the feature is fully implemented, and gives the user the URL and a 3-line summary.
+4. **Review + merge:** Gandalf reviews each code branch (asset-only branches skip the branch review, see "Token budget"); Rick runs `mise run ownership-check <name>/<agent>` (a violation goes back to the agent), merges `READY` branches into the feature branch with `git merge --no-ff` (assets and config before code), runs `check`, `validate-assets`, `sound-check` and `balance-check` after each merge, sends red checks back to the owner, resolves conflicts only where the owner is clear, then removes the merged worktree and branch (`git branch -d <name>/<agent>`, `git worktree prune`). Leftover `<name>/*` branches or worktrees are listed in the final summary.
+5. **Pull request:** after Gandalf's integration review, Rick checks `gh auth status`, pushes `feature/<name>` (only `feature/*`, never force), and opens a PR **as `cookie-bakery[bot]`** with `mise run pr-open` (so the user can approve it; `main` requires 1 approval and the `check` job), filled from `.github/pull_request_template.md`: ready when everything is green and `READY`, otherwise draft with the open issues. The body includes a **Token usage** section: the output of `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/token_usage.py" report --feature <name>` (per agent), plus one line on where most tokens went. He waits for CI with `gh pr checks --watch`, fixes failures through the owners, **opens the PR in the user's browser automatically** (`gh pr view --web`) once the feature is fully implemented, and gives the user the URL and a 3-line summary.
 6. **Merge:** the user reviews and merges the PR. Rick never merges into `main`.
 
 ## Ground rules
@@ -136,7 +143,7 @@ The brief's **Status** line tracks the feature: `planned` (drafted, waiting for 
 2. Research       researcher → docs/research/<topic>.md, committed on the feature branch                   (in progress)
 3. Build          in parallel, each in its own worktree from the feature branch:
                     model-designer · sound-designer · vfx-designer · balance-designer · plugin-coder
-4. Review         plugin-tester per agent branch → READY / NOT READY (+ fix loop with the owner)
+4. Review         plugin-tester per code branch → READY / NOT READY (fix loop only for HIGH/MEDIUM); asset-only branches: checks only
 5. Merge          READY agent branch → feature branch (merge --no-ff), one at a time, checks after each
 5b. Cleanup      code owner does a behaviour-preserving simplify/efficiency pass (incl. Gandalf's PERF findings), reviewed like any branch; skipped if nothing to do
 6. Integration    plugin-tester reviews the whole feature on the feature branch (incl. performance checks)
@@ -154,7 +161,7 @@ The brief's **Status** line tracks the feature: `planned` (drafted, waiting for 
 | vfx-designer | same, for effect IDs; and any item model its effects use is in the contract | coder, other designers |
 | balance-designer | the brief lists a balance impact (new buildings/upgrades/prices/rewards) | coder, other designers |
 | plugin-coder | brief exists; research note on the feature branch if needed; every feature in "Depends on" is merged into `main`; and any **new** Java API from another owner it calls is already merged into the feature branch (see below) | designers' assets and final balance numbers (code against contract IDs and `docs/balance/model.md`; vanilla fallbacks cover missing assets) |
-| plugin-tester (branch) | that branch's owner reported `DONE` and has stopped | other branches |
+| plugin-tester (branch) | a **code** branch's owner reported `DONE` and has stopped (asset-only branches get no branch review) | other branches |
 | plugin-tester (integration) | all agent branches of the feature are merged into the feature branch | — |
 
 **Java code dependencies are the one hard wait.** Assets can arrive later because of IDs and fallbacks, but code can't compile against an API that isn't on the branch.
@@ -184,7 +191,7 @@ After every merge, run `mise run check`, `mise run validate-assets`, `mise run s
 **Leftovers:** at the end of a feature, `git branch --list '<name>/*'` and `git worktree list` must show nothing of this feature; list anything left in the final summary and the PR.
 
 ### Fix loop
-`NOT READY` goes back to the branch owner, in the same worktree and branch, with the tester's findings. When the owner reports `DONE` again, the tester re-reviews only what changed. Max 3 rounds; after that the orchestrator asks the user.
+`NOT READY` (only for HIGH/MEDIUM bugs or PERF-HIGH) goes back to the branch owner, in the same worktree and branch, with the tester's findings. LOW findings don't start a fix round; they go to the PR's follow-ups. When the owner reports `DONE` again, the tester re-reviews only what changed. Max 3 rounds; after that the orchestrator asks the user.
 
 ### Pull request
 1. `gh auth status`: if not logged in, tell the user to run `gh auth login` and stop.
