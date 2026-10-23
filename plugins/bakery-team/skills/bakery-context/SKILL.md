@@ -12,7 +12,7 @@ Be decisive: one solid attempt, one check/review pass, fix only real failures, t
 
 ## Token budget (user rule)
 Spend tokens where they catch real problems:
-- **Lean tests:** only the important code (economy maths, data that could be lost, player/world safety, shipped-file loading, regressions for real bugs). No coverage chasing. Details are in the plugin-tester agent.
+- **Lean tests:** only the important code (economy maths, data that could be lost, player/world safety, shipped-file loading, contracts, regressions for real bugs). No coverage target and no test per class; the suite stays small (CookieClicker 2026-10-23: 686 tests trimmed to ~390 by value). Details are in the plugin-tester agent.
 - **Lean reviews:** Gandalf reviews **code** branches: plugin-coder, and designer branches that change Java or Python tools. Rick merges **asset-only** branches (models, textures, sounds, effect presets, balance numbers) after `ownership-check` and the asset checks, without a branch review; Gandalf sees them once in the integration review.
 - **No fix round for LOWs:** only HIGH/MEDIUM bugs and PERF-HIGH go back to the owner. LOW findings become PR follow-ups.
 - **Small jobs, small teams:** a change with one owner and a few files is one agent run plus checks, without designers or a branch review. Follow-ups for an agent that already worked on the feature go back to it (resumed, context still cached) instead of a new launch.
@@ -22,6 +22,25 @@ Spend tokens where they catch real problems:
 - **Split big code work:** a big feature gets 2–3 plugin-coder runs in parallel on separate parts instead of one long run (a run's cost grows faster than its length, because every call re-reads everything before it). See "Parallel coders" in the `orchestration` skill.
 - **Quality first:** these rules cut repeated reading, not thinking. When a task needs the full GDD section, a reference doc, the Javadocs or a closer look at code, read it.
 - **Measure:** every run's tokens are recorded per machine (SubagentStop/SessionEnd hook). `/bakery-team:token-report` shows them per agent, feature or run, and every feature PR gets a "Token usage" table.
+
+## Code standards (user rule, 2026-10-23)
+Each repo's `docs/architecture.md` has a **Standards** section (plugin-tester keeps it); the short version:
+- **Comments:** only what the code can't say: a non-obvious *why* (version quirks, client behaviour, thread rules, maths), public API contracts the name doesn't cover, and format notes in files admins edit. No comments that repeat the code, narrate history ("since 1.1.0", "was …", brief/feature names) or explain the obvious. Javadoc 1–2 lines, only where needed, and **no `@param`/`@return` tags** (plugins publish no Javadoc): put units, ranges and special values (ticks, blocks/second, `0 = off`, what `null` means) in one doc line or in the parameter name.
+- **Structure:** package by feature (sub-packages once a package passes ~25 classes), one responsibility per class, classes under ~500 lines, methods under ~60; shared helpers instead of copies (e.g. a `WarnOnce` logger, backup/file helpers). No wildcard imports, no package cycles (`config` imports no feature package).
+- **Types:** records and `final` fields by default; `@Nullable` or `Optional` on purpose, never silent `null` returns.
+
+## Config (user rule, 2026-10-23)
+`config.yml` holds only what an admin really sets: resource pack (**first section**), database, feature on/off switches, server-load distances, debug. Internal tuning (render offsets, scales, tick timings, geometry, colours, fallback materials/blocks) are constants in code with the same values; every kept key has a built-in default, so an old or partial config loads cleanly. Balance values stay in `buildings.yml` / `upgrades.yml`, sounds in `sounds.yml`, effects in `effects.yml`.
+
+## Performance (user rule, 2026-10-23)
+- **Hot paths** (per tick, per click, per second per player, per block move): no repeated parsing (pre-compile MiniMessage templates once, e.g. a marker template that swaps values and is tested to equal a real parse), no allocations or region queries that an early-out can skip (bounding box per world before a WorldGuard lookup).
+- **Scheduled tasks:** each has a reason; repeating tasks start on demand and stop themselves when idle (no riders, no views, no loops); one shared task instead of one per player; never two tasks doing the same recompute.
+- **Saving:** batched in one transaction off the main thread; skip players/rows unchanged since the last save, but quit and shutdown always write.
+- **Async:** only after a **spark** profile shows a call matters, and only for work the repo's research note marks safe (pure maths, serialization, JDBC). Entities, world, scoreboard/visibility and WorldGuard queries stay on the main thread.
+- Big clean-ups measure before/after with a small timing test (no JMH) and record it in `docs/reviews/`.
+
+## Plugin descriptor (Paper 26.x)
+Use **`paper-plugin.yml`** (no `plugin.yml`; Paper prefers it when both exist). Libraries (JDBC drivers, pools) load through a `PluginLoader` + `MavenLibraryResolver` on `MavenLibraryResolver.MAVEN_CENTRAL_DEFAULT_MIRROR`, never Maven Central directly; versions come from a pom-filtered properties file plus a test that ties them to the pom. Plugins we call (WorldGuard) go under `dependencies.server` with `load: BEFORE`, `required`, `join-classpath: true`. Commands via Brigadier `LifecycleEvents.COMMANDS`; permissions declared in the descriptor (test the string matches the code). Paper plugins are still marked experimental: re-test a first start on every Paper bump.
 
 ## Memory
 Every repo keeps its own development memory: `.claude/agent-memory/bakery-team-<agent>/` per agent (plugin agents run as `bakery-team:<agent>`; Claude Code turns the ':' into '-' for the folder), `docs/briefs/`, `docs/reviews/`, `docs/architecture.md`. Write what is specific to the repo there. Shared knowledge (this file, the `game-design` skill, the agents) changes only through a pull request on `CookieEmpireMC/CookieMemory` that the user merges.
@@ -35,7 +54,7 @@ Every repo keeps its own development memory: `.claude/agent-memory/bakery-team-<
 | `sound-designer` | creates original .ogg sounds (synthesized or processed CC0), sounds.json, subtitles, sounds.yml | `resourcepack/assets/<ns>/{sounds,sounds.json,lang}`, `src/main/resources/sounds.yml`, `design/sound-*`, `design/sounds.md`, `design/CREDITS.md` |
 | `vfx-designer` | builds the effects engine (particles, display-entity effects) and its presets | `src/main/java/…/vfx/` + its tests, `src/main/resources/effects.yml`, particle files in the pack, `design/vfx-*`, `design/effects.md` |
 | `balance-designer` | economy numbers, formula contract, pacing simulator and reports | `buildings.yml`, `upgrades.yml`, `tools/balance/`, `docs/balance/` |
-| `plugin-coder` | implements features | `src/main/` except designer-owned files, `pom.xml`, `plugin.yml`, other config |
+| `plugin-coder` | implements features | `src/main/` except designer-owned files, `pom.xml`, `paper-plugin.yml`, other config |
 | `plugin-tester` | writes/runs tests, reviews architecture, gives a merge verdict | `src/test/`, `docs/reviews/`, `docs/architecture.md` |
 | `repo-watcher` | fetches every Cookie Empire repo, fast-forwards local branches that are safely behind, reports what was pushed (also runs at session start as a hook) | nothing (read-only apart from git fetch/fast-forward) |
 
@@ -62,7 +81,7 @@ The orchestrator commits as Rickroll Rick (`git -c user.name="Rickroll Rick" -c 
 - **sound-designer:** `.ogg` files, `sounds.json`, subtitle lang files, `sounds.yml`
 - **vfx-designer:** the `vfx` package and its tests, `effects.yml`, particle definitions and textures
 - **balance-designer:** `buildings.yml`, `upgrades.yml` (later golden cookie/prestige values), `tools/balance/`, `docs/balance/`
-- **plugin-coder:** everything else in `src/main/` (incl. wiring the `Effects` service and the single sound service that reads `sounds.yml`), `pom.xml`, `plugin.yml`, other config; tooling (`tools/` except `tools/balance/` and tool tests, `mise.toml`, `.gitignore`, `.gitattributes`, `.mailmap`, `design/requirements.txt`) and the reference docs (`docs/paper-*.md`, `docs/toolchain.md`, `docs/minimessage.md`, `docs/integrations.md`). `mise.toml` and `.gitattributes` changes always go under "Needs human review" in the PR.
+- **plugin-coder:** everything else in `src/main/` (incl. wiring the `Effects` service and the single sound service that reads `sounds.yml`), `pom.xml`, `paper-plugin.yml`, other config; tooling (`tools/` except `tools/balance/` and tool tests, `mise.toml`, `.gitignore`, `.gitattributes`, `.mailmap`, `design/requirements.txt`) and the reference docs (`docs/paper-*.md`, `docs/toolchain.md`, `docs/minimessage.md`, `docs/integrations.md`). `mise.toml` and `.gitattributes` changes always go under "Needs human review" in the PR.
 - **plugin-tester:** `src/test/`, tool tests (`tools/**/test_*.py`), `docs/reviews/`, `docs/architecture.md`
 - **orchestrator (Rick):** `CLAUDE.md`, `docs/briefs/`, `.github/`, merge commits
 - **Human-controlled (no agent):** `.claude/agents/`, `.claude/skills/`, the workflow (`bakery-context` skill), `.claude/ownership.*`, `.claude/hooks/`, `.claude/settings.json`. Rick edits them only when the user explicitly asks, and every change goes under "Needs human review".
@@ -148,7 +167,7 @@ Every agent has `memory: project` in its frontmatter: a persistent folder `.clau
 
 **Don't store:** secrets or tokens; anything already in `CLAUDE.md`, `docs/`, the brief or the code (link to it instead); one-off task details; guesses (only verified facts).
 
-**Keep it lean:** `MEMORY.md` is an index under 200 lines; update or delete entries that turn out wrong or stale; check a remembered fact against the current code or docs before relying on it for something risky.
+**Keep it lean and current:** `MEMORY.md` is an index under 200 lines; update or delete entries that turn out wrong or stale; check a remembered fact against the current code or docs before relying on it for something risky. When a better way replaces an old one, or classes move, **delete the old fact** in the same run instead of adding a second one. Prefer a few topic files (API facts, tooling, repo rules) over one file per feature; a per-feature note whose lesson is now in the code or docs gets deleted.
 
 **Lifecycle** (verified 2026-10-18): project memory lands in the checkout you run in.
 - **Isolated agents** (`isolation: worktree`: coder and designers): memory is in your worktree's `.claude/agent-memory/bakery-team-<agent>/` (writing to the main checkout is blocked by worktree isolation). **Commit it yourself on your branch** like any other file; it reaches the feature branch with your merge and loads in your next worktree.

@@ -40,7 +40,7 @@ Your memory (`.claude/agent-memory/bakery-team-model-designer/`) is a cache, so 
 | ModelEngine | `modelengine/blueprints/<model>.bbmodel` |
 | Specs & sources | `design/<asset>.md` (one per asset), generator scripts in `design/scripts/` |
 
-Never write into `src/main/` or `src/test/`, and never edit Java code, `pom.xml` or `plugin.yml`. That's the coder's job.
+Never write into `src/main/` or `src/test/`, and never edit Java code, `pom.xml` or `paper-plugin.yml`. That's the coder's job.
 
 Each `design/<asset>.md` spec covers: purpose, pipeline, dimensions, pivot points, animation list with timings and loop modes, texture size, colour palette (hex), and the IDs/names the code uses.
 
