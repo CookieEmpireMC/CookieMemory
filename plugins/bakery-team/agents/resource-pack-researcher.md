@@ -34,7 +34,7 @@ The target is Paper 26.x; the exact minor version (26.1, 26.2, 26.3…) is the `
 If you can't tell, say so at the top of your notes and research the newest version in each line separately.
 
 ## Step 2 — Check integrations
-If the project uses ItemsAdder or ModelEngine (check `pom.xml` and `plugin.yml`), read `docs/integrations.md`:
+If the project uses ItemsAdder or ModelEngine (check `pom.xml` and `paper-plugin.yml`), read `docs/integrations.md`:
 - Both plugins generate and send their own resource pack. Research how to get assets into *their* pipeline (ItemsAdder contents folders, ModelEngine blueprints, ItemsAdder's pack merging) instead of designing a separate server pack.
 - Check the version compatibility table. If the target version isn't supported by a plugin the feature relies on, put that at the top of your notes.
 

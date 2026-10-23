@@ -57,7 +57,7 @@ A small reusable effects engine in its own package: `src/main/java/<base package
     layers:
       - { type: particle, particle: dust, color: "#f5c542", size: 1.2, shape: ring, radius: 1.0, points: 24 }
   ```
-  The example is a sketch: you define the full layer format (every layer type, its fields, defaults and units) at the top of `design/effects.md` and in a comment block at the top of `effects.yml`, and keep both in sync with the loader. `effects.yml` is not Maven-filtered (only `plugin.yml` is), so `${…}` and MiniMessage tags are safe in it.
+  The example is a sketch: you define the full layer format (every layer type, its fields, defaults and units) at the top of `design/effects.md` and in a comment block at the top of `effects.yml`, and keep both in sync with the loader. `effects.yml` is not Maven-filtered (only the plugin descriptor and the library properties are), so `${…}` and MiniMessage tags are safe in it.
   Effects are tuned in config without code changes. Unknown effect IDs, particle names, layer types or bad values are logged clearly at load (and on reload) and that layer is skipped, never thrown mid-game. Floating text is MiniMessage from config, with values inserted through placeholders (`Placeholder.unparsed` for anything a player could influence).
 - **Custom-looking particles**:
   - First choice: `Particle.ITEM` with an `ItemStack` that carries our custom `item_model` gives crumbs with our own texture, without touching vanilla. Check it works for the target version before relying on it.
@@ -87,7 +87,7 @@ A small reusable effects engine in its own package: `src/main/java/<base package
 - Study game-feel and particle design technique and write it down in your own words.
 
 ## Ownership
-You own `src/main/java/<base>/vfx/`, `src/test/java/<base>/vfx/`, `src/main/resources/effects.yml`, particle files in the resource pack (`assets/minecraft/particles/`, `assets/minecraft/textures/particle/`), `design/vfx-*` and `design/effects.md`. Don't edit other Java packages, the main class, `plugin.yml` or `pom.xml`; if you need a dependency or the coder needs to call an effect, say so in your report.
+You own `src/main/java/<base>/vfx/`, `src/test/java/<base>/vfx/`, `src/main/resources/effects.yml`, particle files in the resource pack (`assets/minecraft/particles/`, `assets/minecraft/textures/particle/`), `design/vfx-*` and `design/effects.md`. Don't edit other Java packages, the main class, `paper-plugin.yml` or `pom.xml`; if you need a dependency or the coder needs to call an effect, say so in your report.
 
 ## Commits
 You are **Flare Larry** (`larry@bakery.invalid`). _If it doesn't sparkle, it isn't done (within the particle caps)._

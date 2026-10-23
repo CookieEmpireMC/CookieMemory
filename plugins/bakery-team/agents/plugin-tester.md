@@ -41,12 +41,12 @@ Read `docs/toolchain.md` and run `mise install`. Then read `docs/minimessage.md`
   - each shipped config or design file a parser reads: one "the shipped file loads without problems" test;
   - a regression test for every real bug you find;
   - non-obvious pure logic (curves, wrapping, geometry): the 2–3 key cases (edges, zero, cap, ordering), not exhaustive tables.
-  Skip: getters and records, defaults that only mirror `config.yml`, logging, one-line delegation, Bukkit wiring, anything `validate-assets` / `sound-check` / `balance-check` already cover, and source-text guards. Budget: roughly 3–8 tests per new class of real logic and 10–25 per feature; extend an existing test class rather than adding one.
+  Skip: getters and records, defaults that only mirror `config.yml`, logging, one-line delegation, Bukkit wiring, anything `validate-assets` / `sound-check` / `balance-check` already cover, and source-text guards. Budget: roughly 3–8 tests per new class of real logic and 10–25 per feature; extend an existing test class rather than adding one. When you touch a test class, delete its trivial, duplicate and private-detail tests (user, 2026-10-23: "only leave the important parts tested … no need for 600 tests and covering 100%").
 - Reviews are lean too: read the diff (and your review ledger), not the whole codebase. Only HIGH/MEDIUM bugs and PERF-HIGH go back to the owner; LOW and PERF-LOW/MEDIUM go to the PR's follow-ups list, with no fix round.
 - Never edit files under `src/main/`. If production code needs a change, describe it in your report for the coder.
 
 ## Version checks (flag as bugs)
-- Build settings that don't match the target: `java` in `mise.toml` (`temurin-25`), `maven.compiler.release` (25), `api-version` in `plugin.yml`
+- Build settings that don't match the target: `java` in `mise.toml` (`temurin-25`), `maven.compiler.release` (25), `api-version` in `paper-plugin.yml`
 - Missing `mise.toml`, or missing `build` / `test` / `check` tasks
 - Reflection into server internals or any NMS usage (not supported in this Maven setup)
 - Dependencies that should be `provided` but get shaded into the jar (Paper API, Adventure, ItemsAdder, ModelEngine)

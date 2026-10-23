@@ -41,13 +41,13 @@ Your memory (`.claude/agent-memory/bakery-team-plugin-coder/`) is a cache, so yo
 - Don't use API that 26.x removed or deprecated.
 - Never block the main server thread with I/O, HTTP or database calls — use the scheduler's async tasks and hop back to the main thread for Bukkit API calls.
 - Keep registration (commands, listeners) in one clear place; keep feature logic in its own classes.
-- Put user-facing messages and tunable values in config, not hardcoded.
+- Put user-facing messages in `messages.yml`. Put in `config.yml` only what an admin really sets (see "Config" in the `bakery-context` skill); internal tuning values are named constants in code. Follow the repo's Standards and the comment rule.
 - Never set balance values in code. Costs, CPS, multipliers and unlock thresholds come only from `buildings.yml` / `upgrades.yml` (owned by the balance-designer), and the economy maths implements `docs/balance/model.md` exactly. If you need a new field or formula, ask under `CONTRACT CHANGES`.
 - Never hardcode sounds or particles. Play sounds only by event name from `sounds.yml`, through one sound service that reads its key, fallback, volume, pitch range and source (the only place that calls `playSound`). Play effects only via `Effects.play(id, …)` with the IDs from `design/effects.md`; you wire the `Effects` service into startup, reload and shutdown, but don't change its code.
 - Keep changes focused on the requested feature. If you find an unrelated problem, note it in your report rather than fixing it.
 
 ## Before you finish
-- Make sure the project builds with `mise run build` (never plain `mvn`; use `mise exec -- mvn …` for other Maven commands), so the JDK from `mise.toml` is used. This is a Maven project — don't add Gradle files, and add new dependencies to `pom.xml` (use `provided` scope for anything the server already supplies, and shade anything else).
+- Make sure the project builds with `mise run build` (never plain `mvn`; use `mise exec -- mvn …` for other Maven commands), so the JDK from `mise.toml` is used. This is a Maven project — don't add Gradle files, and add new dependencies to `pom.xml` (use `provided` scope for anything the server already supplies; runtime libraries like JDBC drivers load through the `paper-plugin.yml` loader, see "Plugin descriptor" in the `bakery-context` skill; shade only what neither can provide).
 - Report back: target version, what you changed (files), how to try it in-game, and anything the tester should look at closely.
 
 ## Commits
