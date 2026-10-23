@@ -38,6 +38,117 @@ Warm, cosy and a little absurd: a bakery fairy tale with wooden fences, cookie s
 ### 3.2 Visual growth
 Every building you buy appears physically on the plot and gets nicer at every milestone (see 4.3). To prevent lag there is a visual limit per building type (e.g. at most 10 visible entities), while the number behind it keeps counting as normal.
 
+### 3.3 The Ingredient Farm (second location)
+*Added 2026-10-23 (decided with the user).*
+
+A second area further out in the map: **the countryside**, a medieval farming landscape where the five cookie ingredients are made. A central **market village** sits where the road from the bakery arrives, and **five separate places** (one per ingredient) lie **30–40 blocks apart along a looping country road**, each in its own mini-biome. Like the bakery plot it is an **admin-placed, shared location** (WorldGuard region with flag `bakery-farm <id>`) and **client-side**: everyone stands in the same hamlet, but each player sees their own fields, animals, stock and building stages. The houses are shared vanilla-block landmarks; everything that shows a player's progress is a per-player display on top (custom models, 3 stages at 1 / 25 / 100 owned, at most ~10 visible per type). Players walk there or use `/bakery farm` (to the market village) and `/bakery home` back; signposts point to each place.
+- **Unlocking (per run):** a one-time **Farm Deed**, bought at the bakery from about 10K baked, opens the market village and **the Mill**. Every other place opens when the player buys **its first building**: Cow Barn and Sugar Works with the Cow Barn and Sugar Cane Field, Chicken Farm and Cocoa Grove with those buildings. Each opening is a reward moment with a reveal, a fanfare and the path clearing.
+- **Locked places:** the road to a locked place looks **overgrown** to that player, with a "coming soon" signpost showing which building opens it. These are per-player displays; the real path stays the same for everyone.
+
+**The five ingredients** are real cookie ingredients, so they map naturally onto recipes:
+
+| Ingredient | House | Building (economy) |
+|---|---|---|
+| Flour (from wheat) | **The Mill** | Wheat Field |
+| Milk | **The Cow Barn** | Cow Barn |
+| Sugar (from sugar cane) | **The Sugar Works** | Sugar Cane Field |
+| Chocolate (from cocoa) | **The Cocoa Grove** | Cocoa Plantation |
+| Eggs | **The Chicken Farm** | Chicken Farm (replaces the Beehive) |
+
+- **Production:** each ingredient building keeps its CPS and, once the deed is bought, also produces its ingredient automatically (rate × owned × that building's milestone multiplier). Stock has no cap. **Nothing ever punishes the player:** no spoilage, no shortage, production never slows down (idle- and offline-friendly).
+- **Bonus harvest:** each house has a *ripe* spot on a timer (glows, ripe model). Clicking it gives a bonus worth N seconds of that ingredient. Ripe spots wait forever.
+- **Recipes (4.5)** cost cookies **plus ingredients** and are bought in the **Recipe Book**: a lectern in the market village with a stock hologram above it. It opens a textured chest GUI (custom background via a resource-pack font glyph) where each recipe is shown locked / available (missing amounts in red) / bought. The GUI opens only at the farm, so there's a reason to visit.
+- **First visit:** a short per-player farm reveal like the bakery's build cinematic (fields grow in, animals pop out, the water wheel starts, fanfare).
+
+**Room for holograms and panels (every house and the green):**
+- **Front yard:** each house has a clear area on its path side, kept free of decor, fences, trees and tall blocks (like the bakery plot's front zone). It holds:
+  - a **viewpoint**: the spot where you arrive and stand
+  - a **stats hologram**: owned, stage, ingredient per second, stock, next milestone
+  - room for an **upgrade panel** with that ingredient's later upgrades and its buy rows (the same style as the bakery's Bakery Shop and upgrade shelf)
+  - the **ripe spot**
+- **Reach:** everything you click must be within about **5 blocks** of the viewpoint, because the bakery's click distance is 6 and a panel at 6.4 was already too far. Panels face the path at about eye height.
+- **Readability:** behind every panel sits a calm, darker backdrop (a wall, hedge or timber) and nothing that cuts into the text. There is enough light at night (lanterns) that holograms stay readable, and no water, leaves or flowers inside a hitbox.
+- **Market village:** room for the Recipe Book shelter with its stock hologram above it, the notice board at the gate, and space for later hub-style holograms (a farm leaderboard, events).
+
+**Map (guideline, suggested 2026-10-23, not final):**
+- **Size:** the world is about **256 × 256** (16 × 16 chunks) inside a world border.
+- **Why it can be small:** plots are client-side, so there is one bakery and one countryside for everyone, and the map never grows with the player count.
+- **Locations:** the **hub/spawn** sits in the middle (≈ 50 × 50 with margin); the **bakery village** (≈ 55 × 55 including the plot's largest expansion, 35 × 35) and the **countryside** (≈ 150 × 120) are each a short road away, 60–90 blocks (15–20 s walk).
+- **Reserved:** two spots of about 50 × 50 for later, such as the Heavenly Bakery (prestige), an event market or a sixth ingredient.
+- **Scenery:** forest edges, hills and the stream that continues as a river by the bakery.
+
+**Style:** medieval with a strong nature vibe.
+- **Houses:** cobblestone and mossy foundations, timber framing (stripped logs) with daub infill (white terracotta, mud bricks, packed mud), steep dark oak or **thatch** roofs (hay), small shuttered windows, round-topped doors, iron lanterns, wattle fences, mossy stone walls, gravel and coarse-dirt paths.
+- **Landscape:** a clear stream with stone and timber bridges and a millpond with lily pads, wildflower meadows, old oaks and birches, moss on roofs, ferns and berry bushes, an apple orchard, willows by the water, and beehive skeps at the meadow's edge (decor only).
+- **Ambience:** butterflies, bees and fireflies (particles), birdsong, morning mist over the water.
+- **Colours:** warm wood, cream daub, grey-green stone, golden wheat, fresh greens, plus one accent per house.
+
+**Layout (the countryside loop, about 150 × 120):**
+- **Market village** (≈ 40 × 30), where the road from the bakery arrives:
+  - **Entrance:** a roofed timber **lychgate**.
+  - **Square:** a cobbled square with an old stone well and a market cross, and the **Recipe Book** shelter with its stock hologram.
+  - **Notice board:** it shows the Farm Deed price before purchase.
+  - **Around the square:** a few cottages, market stalls and a signpost to every place.
+- **The loop:** a gravel country road, 3 wide, between hedges and wildflower verges, with little stone and timber bridges.
+  - **Water:** a stream crosses the area from north-west to south-east. It drives the mill, fills the sugar channels and waters the pasture.
+  - **Order** (clockwise from the village): **Mill** on the stream, **Cow Barn** on rolling meadow hills, **Chicken Farm** by an orchard, **Cocoa Grove** in a warm hollow against a cliff, **Sugar Works** on a sunny riverbank.
+  - **Spacing:** each place is 30–40 blocks from the next, so each feels like a destination and the whole loop is one short walk.
+- **Between places:** old oaks and birches, an apple orchard, willows by the water, beehive skeps in the meadows, a shrine with a lantern, hay carts and stacked firewood.
+
+**The Mill (flour):**
+- **Building:** a 3-storey water mill (≈ 9 × 9) on the stream. The ground floor is stone over the mill race, the upper floors are timber-framed daub under a steep roof with a hoist beam and pulley.
+- **Moving parts:** a slowly turning **water wheel** (custom model) and, through the open door, the millstones, hopper and flour dust.
+- **Yard:** a cart of flour sacks at the loading door.
+- **Wheat fields (per player):** medieval open-field strips of farmland separated by grass balks and wattle fences.
+  - **Stage 1:** young green wheat.
+  - **Stage 2:** golden wheat with poppy and cornflower edges, and a scarecrow.
+  - **Stage 3:** stooks of sheaves, a harvest cart, and a windmill on the hill behind with turning sails.
+- **Ripe:** a glowing full flour sack by the door, with a flour puff and a wooden thunk.
+- **Sound:** water, a creaking wheel, grinding stones, wind in the wheat.
+
+**The Cow Barn (milk):**
+- **Building:** a big **red timber barn** (≈ 11 × 9) on a cobblestone base with a high gambrel roof, a hayloft door with hay sticking out, double barn doors and a weather vane.
+- **Dairy (lean-to):** churns, a butter churn, a cheese shelf, a cool stone floor.
+- **Pasture (per player):** a meadow inside wattle and stone walls that reaches the stream, with a trough and a salt lick. Your cows graze there.
+  - **Stage 1:** a few cows and a hay pile.
+  - **Stage 2:** more cows with bells, a full hay rack, a calf.
+  - **Stage 3:** a prize cow with a flower wreath, a second barn bay, a milk cart.
+- **Ripe:** a full milk churn with a splash.
+- **Sound:** soft mooing, cowbells, the creek.
+
+**The Sugar Works (sugar):**
+- **Cane fields (per player):** sugar cane rows along irrigation channels with little wooden sluice gates, fed from the stream.
+  - **Stage 1:** short young rows.
+  - **Stage 2:** full-height cane, bamboo poles, drying racks.
+  - **Stage 3:** dense fields, a cane cart, a second press.
+- **Building:** a **boiling house** (≈ 9 × 7) in stone and brick with a tall steaming brick chimney, open on one side.
+  - **Press:** a wooden roller press turned by a capstan.
+  - **Kettles:** a row of copper kettles going from green juice to golden syrup.
+  - **Cooling room:** shelves of white **sugar loaves** in clay moulds.
+- **Ripe:** a sparkling fresh sugar loaf, with crystal particles and a bright clink.
+- **Sound:** bubbling kettles, the creaking press, gurgling channels.
+
+**The Cocoa Grove (chocolate):**
+- **Setting:** a warm, sheltered hollow against a cliff, with a slightly magical microclimate kept warm by a steaming **hot spring**.
+- **Grove (per player):** jungle trees with cocoa pods, vines, moss and ferns.
+  - **Stage 1:** two young trees with green pods.
+  - **Stage 2:** more trees, ripe orange pods, beans drying on woven mats.
+  - **Stage 3:** a full grove with rope-bridge canopy walkways, lanterns, pod baskets.
+- **Building:** an old **chocolate house** (≈ 7 × 7) built into the cliff, in dark stone and brown terracotta, with warm glowing arched windows. Inside: a stone grinding table with roller, copper pots of melted chocolate, and bars cooling on a marble slab.
+- **Ripe:** amber-glowing pods or a shining tray of bars, with a soft snap and cocoa dust.
+- **Sound:** dripping water, birds and insects, a crackling stove, the spring bubbling.
+
+**The Chicken Farm (eggs):**
+- **Setting:** a cheerful farmyard beside an apple orchard.
+- **Hen house:** a timber hen house (≈ 7 × 5) raised on stilts, with wattle walls, a thatched roof, a ramp to the hatch, nesting boxes, perches and a rooster weather vane.
+- **Chicken run (per player):** wattle fences with a net roof, dust-bathing patches, a feed trough, a water dish. Your hens peck around inside.
+  - **Stage 1:** a few white hens.
+  - **Stage 2:** brown and speckled hens, a rooster on the fence, chicks following a hen.
+  - **Stage 3:** a second coop, a dovecote tower, a **golden hen**, an egg cart.
+- **Egg shed:** baskets of eggs and a "Fresh Eggs" sign.
+- **Ripe:** a nest with a glowing golden egg, with a happy cluck and a feather puff.
+- **Sound:** clucking, one rooster crow per in-game morning (never spammy), rustling straw.
+
 ## 4. Economy & upgrades
 
 ### 4.1 Basic rules
@@ -68,7 +179,7 @@ Every building is a physical object on the plot.
 | 4 | Sugar Cane Field | 12,000 | 47 | Expansion 1 |
 | 5 | Industrial Oven | 130,000 | 260 | Expansion 2 |
 | 6 | Extra Conveyor Belt | 1.4M | 1,400 | Expansion 2 |
-| 7 | Beehive (honey cookies) | 20M | 7,800 | Expansion 3 |
+| 7 | Chicken Farm (eggs) | 20M | 7,800 | Expansion 3 |
 | 8 | Cocoa Plantation | 330M | 44,000 | Expansion 3 |
 | 9 | Shipping Centre | 5.1B | 260,000 | Expansion 4 (after Rebirth 1) |
 | 10 | Alchemy Lab | 75B | 1.6M | Expansion 4 (after Rebirth 1) |
@@ -101,18 +212,18 @@ One-time purchases, bought through the menu. Base CPC is 1 and every upgrade add
 The Handy Fingers keep clicking worthwhile in the later game.
 
 ### 4.5 Recipes (global upgrades)
-One-time cookie types with a permanent bonus for the current run (reset on Rebirth). They appear in the menu once you have baked a total number of cookies in the run.
+One-time cookie types with a permanent bonus for the current run (reset on Rebirth). They appear in the Recipe Book (3.3) once you have baked a total number of cookies in the run **and** own the Farm Deed. Each costs cookies **plus ingredients** from the Ingredient Farm. The ingredient column is the starting idea; amounts and exact mixes are tuned by the balance-designer.
 
-| Recipe | Cost | CPS bonus |
-|---|---|---|
-| Butter | 1,000 | +2% |
-| Brown Sugar | 10,000 | +2% |
-| Chocolate Chips | 100,000 | +3% |
-| Oatmeal | 1M | +3% |
-| Hazelnut | 10M | +4% |
-| Macadamia | 100M | +4% |
-| Caramel | 1B | +5% |
-| Syrup (after Rebirth 1) | 10B | +5% |
+| Recipe | Cost | CPS bonus | Ingredients |
+|---|---|---|---|
+| Butter | 1,000 | +2% | milk |
+| Brown Sugar | 10,000 | +2% | sugar |
+| Chocolate Chips | 100,000 | +3% | chocolate |
+| Oatmeal | 1M | +3% | flour + milk |
+| Hazelnut | 10M | +4% | flour + sugar + eggs |
+| Macadamia | 100M | +4% | flour + eggs + chocolate |
+| Caramel | 1B | +5% | sugar + milk + eggs |
+| Syrup (after Rebirth 1) | 10B | +5% | sugar + milk + eggs + flour + chocolate |
 
 ### 4.6 Golden cookies
 Appear from Expansion 2 at a random spot on the plot (particles + sound). They disappear after about 15 seconds if you don't grab them.
@@ -151,7 +262,7 @@ Every expansion is a one-time purchase per run. The fences move out, new terrain
 | Start | 11×11 | — | Wheat Field, Baker's Apprentice, clicking |
 | Expansion 1 | 15×15 | 10,000 | Cow Barn, Sugar Cane Field, faster belt |
 | Expansion 2 | 20×20 | 500,000 | Industrial Oven, Extra Belt, Golden Cookies |
-| Expansion 3 | 25×25 | 25M | Beehive, Cocoa Plantation, big factory extension, Rebirth Hologram |
+| Expansion 3 | 25×25 | 25M | Chicken Farm, Cocoa Plantation, big factory extension, Rebirth Hologram |
 | Expansion 4 | 30×30 | 1B | Shipping Centre, Alchemy Lab. Only after Rebirth 1. |
 | Expansion 5 | 35×35 | 100B | Portal Bakery. Only after Rebirth 3. |
 
@@ -320,7 +431,8 @@ Storage in SQLite or MySQL. Autosave regularly and on logout.
 
 ## Differences from the current build
 Maintained by the orchestrator. Each line is resolved by a future feature (then removed here).
-- **Buildings and prices (4.2):** the shipped `buildings.yml` has `villager_baker` (50 / 0.5 CPS) and `wheat_farm` (500 / 4 CPS); this document has Wheat Field 15 / 0.1 and Baker's Apprentice 100 / 1, plus 9 more buildings. The cost growth of 1.15 matches. → balance-designer, next economy feature.
+- **Buildings (4.2, 4.3):** all 11 buildings and the milestones are built (building-roster, 1.2.0), with tuned values (e.g. Wheat Field 15 / 0.15, Baker's Apprentice 75 / 1). Unlocks use cookies baked instead of expansions until plot expansions exist. The shipped id for building 7 is still `beehive`; the Ingredient Farm feature renames it to the Chicken Farm (`chicken_farm`, with a save migration).
+- **Plots are client-side (1, 3):** plots are admin-placed shared locations where every player sees only their own progress. There are no private per-player regions, so **visitor mode** is on hold.
 - **Plot size (3.1, 5):** `factory-makeover` ships a fixed 31×30 fenced plot with a 19×14 factory; this document starts at 11×11 and grows to 35×35 through expansions. → a `plot-expansions` feature has to reconcile the factory size with the starter plot (smaller starter factory, or a bigger starter plot).
-- **Shop (4.7), click upgrades (4.4), recipes (4.5), golden cookies (4.6), prestige (6), cosmetics (7), offline progress (8):** not built yet.
-
+- **Shop (4.7):** the buildings and click upgrades are bought on in-world hologram panels and an upgrade shelf, not a chest GUI. The first chest GUI comes with the Recipe Book.
+- **Ingredient Farm and recipes (3.3, 4.5), golden cookies (4.6), prestige (6), cosmetics (7), offline progress (8):** not built yet. Click upgrades (4.4) are built (upgrade-holograms).
