@@ -41,7 +41,9 @@ Every building you buy appears physically on the plot and gets nicer at every mi
 ### 3.3 The Ingredient Farm (second location)
 *Added 2026-10-23 (decided with the user).*
 
-A second location further out in the map: a **medieval farming hamlet in a green valley**, where the five cookie ingredients are made. Like the bakery plot it is an **admin-placed, shared location** (WorldGuard region with flag `bakery-farm <id>`) and **client-side**: everyone stands in the same hamlet, but each player sees their own fields, animals, stock and building stages. The houses are shared vanilla-block landmarks; everything that shows a player's progress is a per-player display on top (custom models, 3 stages at 1 / 25 / 100 owned, at most ~10 visible per type). Players walk there or use `/bakery farm` (and `/bakery home` back). It is unlocked per run with a one-time **Farm Deed**, bought at the bakery from about 10K baked.
+A second area further out in the map: **the countryside**, a medieval farming landscape where the five cookie ingredients are made. A central **market village** sits where the road from the bakery arrives, and **five separate places** (one per ingredient) lie **30–40 blocks apart along a looping country road**, each in its own mini-biome. Like the bakery plot it is an **admin-placed, shared location** (WorldGuard region with flag `bakery-farm <id>`) and **client-side**: everyone stands in the same hamlet, but each player sees their own fields, animals, stock and building stages. The houses are shared vanilla-block landmarks; everything that shows a player's progress is a per-player display on top (custom models, 3 stages at 1 / 25 / 100 owned, at most ~10 visible per type). Players walk there or use `/bakery farm` (to the market village) and `/bakery home` back; signposts point to each place.
+- **Unlocking (per run):** a one-time **Farm Deed**, bought at the bakery from about 10K baked, opens the market village and **the Mill**. Every other place opens when the player buys **its first building**: Cow Barn and Sugar Works with the Cow Barn and Sugar Cane Field, Chicken Farm and Cocoa Grove with those buildings. Each opening is a reward moment with a reveal, a fanfare and the path clearing.
+- **Locked places:** the road to a locked place looks **overgrown** to that player, with a "coming soon" signpost showing which building opens it. These are per-player displays; the real path stays the same for everyone.
 
 **The five ingredients** are real cookie ingredients, so they map naturally onto recipes:
 
@@ -55,7 +57,7 @@ A second location further out in the map: a **medieval farming hamlet in a green
 
 - **Production:** each ingredient building keeps its CPS and, once the deed is bought, also produces its ingredient automatically (rate × owned × that building's milestone multiplier). Stock has no cap. **Nothing ever punishes the player:** no spoilage, no shortage, production never slows down (idle- and offline-friendly).
 - **Bonus harvest:** each house has a *ripe* spot on a timer (glows, ripe model). Clicking it gives a bonus worth N seconds of that ingredient. Ripe spots wait forever.
-- **Recipes (4.5)** cost cookies **plus ingredients** and are bought in the **Recipe Book**: a lectern on the village green with a stock hologram above it. It opens a textured chest GUI (custom background via a resource-pack font glyph) where each recipe is shown locked / available (missing amounts in red) / bought. The GUI opens only at the farm, so there's a reason to visit.
+- **Recipes (4.5)** cost cookies **plus ingredients** and are bought in the **Recipe Book**: a lectern in the market village with a stock hologram above it. It opens a textured chest GUI (custom background via a resource-pack font glyph) where each recipe is shown locked / available (missing amounts in red) / bought. The GUI opens only at the farm, so there's a reason to visit.
 - **First visit:** a short per-player farm reveal like the bakery's build cinematic (fields grow in, animals pop out, the water wheel starts, fanfare).
 
 **Room for holograms and panels (every house and the green):**
@@ -66,7 +68,14 @@ A second location further out in the map: a **medieval farming hamlet in a green
   - the **ripe spot**
 - **Reach:** everything you click must be within about **5 blocks** of the viewpoint, because the bakery's click distance is 6 and a panel at 6.4 was already too far. Panels face the path at about eye height.
 - **Readability:** behind every panel sits a calm, darker backdrop (a wall, hedge or timber) and nothing that cuts into the text. There is enough light at night (lanterns) that holograms stay readable, and no water, leaves or flowers inside a hitbox.
-- **Village green:** room for the Recipe Book shelter with its stock hologram above it, the notice board at the gate, and space for later hub-style holograms (a farm leaderboard, events).
+- **Market village:** room for the Recipe Book shelter with its stock hologram above it, the notice board at the gate, and space for later hub-style holograms (a farm leaderboard, events).
+
+**Map (guideline, suggested 2026-10-23, not final):**
+- **Size:** the world is about **256 × 256** (16 × 16 chunks) inside a world border.
+- **Why it can be small:** plots are client-side, so there is one bakery and one countryside for everyone, and the map never grows with the player count.
+- **Locations:** the **hub/spawn** sits in the middle (≈ 50 × 50 with margin); the **bakery village** (≈ 55 × 55 including the plot's largest expansion, 35 × 35) and the **countryside** (≈ 150 × 120) are each a short road away, 60–90 blocks (15–20 s walk).
+- **Reserved:** two spots of about 50 × 50 for later, such as the Heavenly Bakery (prestige), an event market or a sixth ingredient.
+- **Scenery:** forest edges, hills and the stream that continues as a river by the bakery.
 
 **Style:** medieval with a strong nature vibe.
 - **Houses:** cobblestone and mossy foundations, timber framing (stripped logs) with daub infill (white terracotta, mud bricks, packed mud), steep dark oak or **thatch** roofs (hay), small shuttered windows, round-topped doors, iron lanterns, wattle fences, mossy stone walls, gravel and coarse-dirt paths.
@@ -74,10 +83,17 @@ A second location further out in the map: a **medieval farming hamlet in a green
 - **Ambience:** butterflies, bees and fireflies (particles), birdsong, morning mist over the water.
 - **Colours:** warm wood, cream daub, grey-green stone, golden wheat, fresh greens, plus one accent per house.
 
-**Hamlet layout** (about 60 × 50, open to the south where the road from the bakery arrives):
-- **Entrance:** a roofed timber **lychgate** with a sign, then a **village green** with an old stone well, a market cross and the Recipe Book shelter. Before the deed is bought, a per-player notice board at the gate shows its price.
-- **Water:** the stream enters in the north-west, feeds the millpond and the mill race, then winds south-east past the pasture.
-- **Houses**, clockwise from the north-west, each in its own framed yard: Mill (on the stream), Cocoa Grove (north, a warm hollow), Chicken Farm (north-east, by the green), Cow Barn (east pasture by the stream), Sugar Works (south-west, sunny flat land by the water).
+**Layout (the countryside loop, about 150 × 120):**
+- **Market village** (≈ 40 × 30), where the road from the bakery arrives:
+  - **Entrance:** a roofed timber **lychgate**.
+  - **Square:** a cobbled square with an old stone well and a market cross, and the **Recipe Book** shelter with its stock hologram.
+  - **Notice board:** it shows the Farm Deed price before purchase.
+  - **Around the square:** a few cottages, market stalls and a signpost to every place.
+- **The loop:** a gravel country road, 3 wide, between hedges and wildflower verges, with little stone and timber bridges.
+  - **Water:** a stream crosses the area from north-west to south-east. It drives the mill, fills the sugar channels and waters the pasture.
+  - **Order** (clockwise from the village): **Mill** on the stream, **Cow Barn** on rolling meadow hills, **Chicken Farm** by an orchard, **Cocoa Grove** in a warm hollow against a cliff, **Sugar Works** on a sunny riverbank.
+  - **Spacing:** each place is 30–40 blocks from the next, so each feels like a destination and the whole loop is one short walk.
+- **Between places:** old oaks and birches, an apple orchard, willows by the water, beehive skeps in the meadows, a shrine with a lantern, hay carts and stacked firewood.
 
 **The Mill (flour):**
 - **Building:** a 3-storey water mill (≈ 9 × 9) on the stream. The ground floor is stone over the mill race, the upper floors are timber-framed daub under a steep roof with a hoist beam and pulley.
@@ -123,7 +139,7 @@ A second location further out in the map: a **medieval farming hamlet in a green
 - **Sound:** dripping water, birds and insects, a crackling stove, the spring bubbling.
 
 **The Chicken Farm (eggs):**
-- **Setting:** a cheerful farmyard next to the village green.
+- **Setting:** a cheerful farmyard beside an apple orchard.
 - **Hen house:** a timber hen house (≈ 7 × 5) raised on stilts, with wattle walls, a thatched roof, a ramp to the hatch, nesting boxes, perches and a rooster weather vane.
 - **Chicken run (per player):** wattle fences with a net roof, dust-bathing patches, a feed trough, a water dish. Your hens peck around inside.
   - **Stage 1:** a few white hens.
