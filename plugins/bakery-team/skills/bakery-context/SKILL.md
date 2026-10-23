@@ -25,7 +25,7 @@ Spend tokens where they catch real problems:
 
 ## Code standards (user rule, 2026-10-23)
 Each repo's `docs/architecture.md` has a **Standards** section (plugin-tester keeps it); the short version:
-- **Comments:** only what the code can't say: a non-obvious *why* (version quirks, client behaviour, thread rules, maths), public API contracts the name doesn't cover, and format notes in files admins edit. No comments that repeat the code, narrate history ("since 1.1.0", "was …", brief/feature names) or explain the obvious. Javadoc 1–2 lines, only where needed.
+- **Comments:** only what the code can't say: a non-obvious *why* (version quirks, client behaviour, thread rules, maths), public API contracts the name doesn't cover, and format notes in files admins edit. No comments that repeat the code, narrate history ("since 1.1.0", "was …", brief/feature names) or explain the obvious. Javadoc 1–2 lines, only where needed, and **no `@param`/`@return` tags** (plugins publish no Javadoc): put units, ranges and special values (ticks, blocks/second, `0 = off`, what `null` means) in one doc line or in the parameter name.
 - **Structure:** package by feature (sub-packages once a package passes ~25 classes), one responsibility per class, classes under ~500 lines, methods under ~60; shared helpers instead of copies (e.g. a `WarnOnce` logger, backup/file helpers). No wildcard imports, no package cycles (`config` imports no feature package).
 - **Types:** records and `final` fields by default; `@Nullable` or `Optional` on purpose, never silent `null` returns.
 
