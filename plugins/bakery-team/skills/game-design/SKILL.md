@@ -12,12 +12,13 @@ The user's game design document (GDD) is the **source of truth for the game's vi
 - **§3 Plot:**
   - The starter plot is about 11×11 with fences: factory, pedestal with a floating 3D cookie you click, conveyor belt (more and faster cookies with CPS), stats holograms, and a shop panel.
   - Bought buildings appear physically, with a visual cap per type.
+  - **Ingredient Farm (§3.3):** a second, client-side location, a medieval farming hamlet in a green valley unlocked by a Farm Deed. Five houses make the five cookie ingredients: Mill → flour, Cow Barn → milk, Sugar Works → sugar, Cocoa Grove → chocolate, Chicken Farm → eggs. Each house has per-player fields or animals in 3 stages and a ripe bonus harvest. Production is automatic and never punishing. The Recipe Book there opens a textured chest GUI. Every house keeps a clear front yard for a stats hologram, an upgrade panel and the ripe spot, all within ~5 blocks of the viewpoint.
 - **§4 Economy:**
   - Cookies, CPC (starts at 1), CPS. A building costs base × 1.15^owned, and there is no selling. CPS = Σ(base × count × milestone) × (1 + additive bonuses) × crowns × buff.
-  - 11 buildings, from Wheat Field 15/0.1 to Portal Bakery 1T/10M, unlocked by expansion.
+  - 11 buildings, from Wheat Field 15/0.1 to Portal Bakery 1T/10M, unlocked by expansion. Building 7 is the Chicken Farm (eggs), which replaces the Beehive.
   - Milestones give ×2 at 10/25/50/100/150/200, and the model changes too.
   - Click upgrades: +1 up to +500 CPC, then "Handy Fingers" (+1/3/5% of CPS per click).
-  - Recipes: +2–5% CPS each, reset on rebirth.
+  - Recipes: +2–5% CPS each, cost cookies + farm ingredients (flour, milk, sugar, chocolate, eggs), bought in the Recipe Book at the farm, reset on rebirth.
   - Golden cookies (from Expansion 2): every 2–5 min, gone after 15 s. Frenzy ×7 CPS 30 s (45%), Click Frenzy +777% 15 s (25%), Lucky (20%), Cookie Rain (10%). Buffs stack and none are negative.
   - The shop panel opens a chest GUI with tabs: buildings ×1/×10/×100/Max, clicks, recipes, expansion, prestige, statistics, cosmetics. Numbers are abbreviated (1.5K, 2.3M…).
 - **§5 Expansions:**
@@ -36,7 +37,8 @@ The user's game design document (GDD) is the **source of truth for the game's vi
 
 ## Differences from the current build
 Maintained by the orchestrator. Each line is resolved by a future feature (then removed here).
-- **Buildings and prices (4.2):** the shipped `buildings.yml` has `villager_baker` (50 / 0.5 CPS) and `wheat_farm` (500 / 4 CPS); this document has Wheat Field 15 / 0.1 and Baker's Apprentice 100 / 1, plus 9 more buildings. The cost growth of 1.15 matches. → balance-designer, next economy feature.
+- **Buildings (4.2, 4.3):** all 11 buildings and the milestones are built (building-roster, 1.2.0), with tuned values (e.g. Wheat Field 15 / 0.15, Baker's Apprentice 75 / 1). Unlocks use cookies baked instead of expansions until plot expansions exist. The shipped id for building 7 is still `beehive`; the Ingredient Farm feature renames it to the Chicken Farm (`chicken_farm`, with a save migration).
+- **Plots are client-side (1, 3):** plots are admin-placed shared locations where every player sees only their own progress. There are no private per-player regions, so **visitor mode** is on hold.
 - **Plot size (3.1, 5):** `factory-makeover` ships a fixed 31×30 fenced plot with a 19×14 factory; this document starts at 11×11 and grows to 35×35 through expansions. → a `plot-expansions` feature has to reconcile the factory size with the starter plot (smaller starter factory, or a bigger starter plot).
-- **Shop (4.7), click upgrades (4.4), recipes (4.5), golden cookies (4.6), prestige (6), cosmetics (7), offline progress (8):** not built yet.
-
+- **Shop (4.7):** the buildings and click upgrades are bought on in-world hologram panels and an upgrade shelf, not a chest GUI. The first chest GUI comes with the Recipe Book.
+- **Ingredient Farm and recipes (3.3, 4.5), golden cookies (4.6), prestige (6), cosmetics (7), offline progress (8):** not built yet. Click upgrades (4.4) are built (upgrade-holograms).
