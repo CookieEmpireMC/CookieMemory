@@ -77,6 +77,10 @@ A second area further out in the map: **the countryside**, a medieval farming la
 - **Reserved:** two spots of about 50 × 50 for later, such as the Heavenly Bakery (prestige), an event market or a sixth ingredient.
 - **Scenery:** forest edges, hills and the stream that continues as a river by the bakery.
 
+**Build standard (2026-10-25):** every house follows the reworked factory's craft, not the starter cottage: a stone plinth ramp, a dark timber frame, a darker eave and ridge, a bracket or jetty, lit windows and at most one chimney per place, each with its own roof form and wall skin so the five places don't look alike. Sizes and techniques come from `docs/research/farm-buildings.md` in CookieClicker (showcase builds on PlanetMinecraft and BuiltByBit). The hero houses (Mill, Cow Barn, Sugar Works) are about 1.5–3.5k blocks each with their scene, the others 0.6–1.2k; roofs are dark-oak shingle (Mill, market), clay-tile look (Barn, Sugar Works, Chicken Farm) or thatch (Cocoa Grove).
+
+**Built in three parts:** `countryside-builds` (the shared village, places, terrain and the turning water wheel), then `ingredients` (economy, Farm Deed, recipes, the Recipe Book GUI), then `farm-life` (per-player fields and animals, place unlocks, ripe harvest, the first-visit reveal).
+
 **Style:** medieval with a strong nature vibe.
 - **Houses:** cobblestone and mossy foundations, timber framing (stripped logs) with daub infill (white terracotta, mud bricks, packed mud), steep dark oak or **thatch** roofs (hay), small shuttered windows, round-topped doors, iron lanterns, wattle fences, mossy stone walls, gravel and coarse-dirt paths.
 - **Landscape:** a clear stream with stone and timber bridges and a millpond with lily pads, wildflower meadows, old oaks and birches, moss on roofs, ferns and berry bushes, an apple orchard, willows by the water, and beehive skeps at the meadow's edge (decor only).
@@ -96,7 +100,7 @@ A second area further out in the map: **the countryside**, a medieval farming la
 - **Between places:** old oaks and birches, an apple orchard, willows by the water, beehive skeps in the meadows, a shrine with a lantern, hay carts and stacked firewood.
 
 **The Mill (flour):**
-- **Building:** a 3-storey water mill (≈ 9 × 9) on the stream. The ground floor is stone over the mill race, the upper floors are timber-framed daub under a steep roof with a hoist beam and pulley.
+- **Building:** a large stone **watermill** (≈ 15 × 11 plus the wheel bay, about 2–3k blocks with its scene) rising straight out of its millpond on a tall retaining wall; water fills about a third of the front view. The ground floor is stone, the jettied upper floor is close-studded timber-framed daub under a steep (50–55°) dark-oak shingle roof at three heights, with dormers, pent skirts and a hoist gablet with a pulley beam. The wheel turns in a stone slot between two piers under the overhang. Beside it: a granary on staddle stones, the mill race and a fenced stone bridge.
 - **Moving parts:** a slowly turning **water wheel** (custom model) and, through the open door, the millstones, hopper and flour dust.
 - **Yard:** a cart of flour sacks at the loading door.
 - **Wheat fields (per player):** medieval open-field strips of farmland separated by grass balks and wattle fences.
@@ -107,7 +111,7 @@ A second area further out in the map: **the countryside**, a medieval farming la
 - **Sound:** water, a creaking wheel, grinding stones, wind in the wheat.
 
 **The Cow Barn (milk):**
-- **Building:** a big **red timber barn** (≈ 11 × 9) on a cobblestone base with a high gambrel roof, a hayloft door with hay sticking out, double barn doors and a weather vane.
+- **Building:** a long, low **medieval threshing barn** (≈ 25 × 13) on a cobblestone plinth, with vertical board-and-batten walls on a dark timber frame. The steep clay-tile-look roof is the dominant mass (55–60% of the façade), with half-hipped ends, a catslide outshut at the back, 2–3 small dormers and **one stepped (corbie) gable** over the wide cart entrance with braced double doors; a hoist beam with a hay bale and a weather vane. (Changed 2026-10-25 from a red gambrel barn, which reads American rather than medieval.)
 - **Dairy (lean-to):** churns, a butter churn, a cheese shelf, a cool stone floor.
 - **Pasture (per player):** a meadow inside wattle and stone walls that reaches the stream, with a trough and a salt lick. Your cows graze there.
   - **Stage 1:** a few cows and a hay pile.
@@ -121,7 +125,7 @@ A second area further out in the map: **the countryside**, a medieval farming la
   - **Stage 1:** short young rows.
   - **Stage 2:** full-height cane, bamboo poles, drying racks.
   - **Stage 3:** dense fields, a cane cart, a second press.
-- **Building:** a **boiling house** (≈ 9 × 7) in stone and brick with a tall steaming brick chimney, open on one side.
+- **Building:** a works on **three terraces** down the riverbank (about 3k blocks): a round **horse-mill** with a conical roof on the top terrace, the **boiling house** (≈ 15 × 9) in brick and timber with stone quoins, a hip roof and the place's single steaming brick chimney in the middle, and a curing loft at the bottom; clay-tile-look roofs.
   - **Press:** a wooden roller press turned by a capstan.
   - **Kettles:** a row of copper kettles going from green juice to golden syrup.
   - **Cooling room:** shelves of white **sugar loaves** in clay moulds.
@@ -134,13 +138,13 @@ A second area further out in the map: **the countryside**, a medieval farming la
   - **Stage 1:** two young trees with green pods.
   - **Stage 2:** more trees, ripe orange pods, beans drying on woven mats.
   - **Stage 3:** a full grove with rope-bridge canopy walkways, lanterns, pod baskets.
-- **Building:** an old **chocolate house** (≈ 7 × 7) built into the cliff, in dark stone and brown terracotta, with warm glowing arched windows. Inside: a stone grinding table with roller, copper pots of melted chocolate, and bars cooling on a marble slab.
+- **Building:** a raised **jungle lodge** (≈ 11 × 9) against the cliff on a mossy stone plinth, with a straw-coloured hay-roll thatch hip roof and eyebrow dormers, a veranda with lanterns, an open fermentation shed and a drying platform with a striped awning, around a round plaza ringed by terraces (no chimney; cooking on an open fire). Inside: a stone grinding table with roller, copper pots of melted chocolate, and bars cooling on a marble slab.
 - **Ripe:** amber-glowing pods or a shining tray of bars, with a soft snap and cocoa dust.
 - **Sound:** dripping water, birds and insects, a crackling stove, the spring bubbling.
 
 **The Chicken Farm (eggs):**
 - **Setting:** a cheerful farmyard beside an apple orchard.
-- **Hen house:** a timber hen house (≈ 7 × 5) raised on stilts, with wattle walls, a thatched roof, a ramp to the hatch, nesting boxes, perches and a rooster weather vane.
+- **Hen house:** a **stone coop** (≈ 11 × 6) with coped gable parapets, a stepped buttress, a steep clay-tile-look roof and dark shutters (a timber coop on staddle stones is the alternative), with a ramp to the pop hole, nesting boxes and a rooster weather vane; a square **dovecote** (≈ 5 × 5) with a rat ledge and a louvre cupola; the run fenced with stone pillars and wattle hurdles.
 - **Chicken run (per player):** wattle fences with a net roof, dust-bathing patches, a feed trough, a water dish. Your hens peck around inside.
   - **Stage 1:** a few white hens.
   - **Stage 2:** brown and speckled hens, a rooster on the fence, chicks following a hen.
