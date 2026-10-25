@@ -39,6 +39,8 @@ Warm, cosy and a little absurd: a bakery fairy tale with wooden fences, cookie s
 Every building you buy appears physically on the plot and gets nicer at every milestone (see 4.3). To prevent lag there is a visual limit per building type (e.g. at most 10 visible entities), while the number behind it keeps counting as normal.
 
 ### 3.3 The Ingredient Farm (second location)
+*On hold (2026-10-25): the user stopped new builds ("creating builds is pointless, just keep the factory one"). The farm location below is parked (CookieClicker branch `feature/countryside-builds`: farm setup, the Mill and its waterwheel). Ingredients and recipes are built without it (see 4.5): the ingredient buildings produce ingredients after the one-time Recipe Book upgrade, and the Recipe Book is a GUI opened by command or from the Bakery Shop panel.*
+
 *Added 2026-10-23 (decided with the user).*
 
 A second area further out in the map: **the countryside**, a medieval farming landscape where the five cookie ingredients are made. A central **market village** sits where the road from the bakery arrives, and **five separate places** (one per ingredient) lie **30–40 blocks apart along a looping country road**, each in its own mini-biome. Like the bakery plot it is an **admin-placed, shared location** (WorldGuard region with flag `bakery-farm <id>`) and **client-side**: everyone stands in the same hamlet, but each player sees their own fields, animals, stock and building stages. The houses are shared vanilla-block landmarks; everything that shows a player's progress is a per-player display on top (custom models, 3 stages at 1 / 25 / 100 owned, at most ~10 visible per type). Players walk there or use `/bakery farm` (to the market village) and `/bakery home` back; signposts point to each place.
@@ -216,7 +218,9 @@ One-time purchases, bought through the menu. Base CPC is 1 and every upgrade add
 The Handy Fingers keep clicking worthwhile in the later game.
 
 ### 4.5 Recipes (global upgrades)
-One-time cookie types with a permanent bonus for the current run (reset on Rebirth). They appear in the Recipe Book (3.3) once you have baked a total number of cookies in the run **and** own the Farm Deed. Each costs cookies **plus ingredients** from the Ingredient Farm. The ingredient column is the starting idea; amounts and exact mixes are tuned by the balance-designer.
+One-time cookie types with a permanent bonus for the current run (reset on Rebirth). They appear in the **Recipe Book** once you have baked a total number of cookies in the run **and** own the Recipe Book: a one-time upgrade on the upgrade shelf (from about 10K baked) that also starts ingredient production in the five ingredient buildings (Wheat Field → flour, Cow Barn → milk, Sugar Cane Field → sugar, Cocoa Plantation → chocolate, Chicken Farm → eggs). The Recipe Book is a textured chest GUI, opened with `/bakery recipes` or from the Bakery Shop panel. The bonus multiplies all building CPS: total = buildings × (1 + sum of recipe percents). Each costs cookies **plus ingredients** from the Ingredient Farm. The ingredient column is the starting idea; amounts and exact mixes are tuned by the balance-designer.
+
+Shipped values (ingredients, 1.5.0; tuned by the balance-designer, see `docs/balance/model.md`): Butter 3K + 200 milk +2%, Oatmeal 10K + 1,500 flour +2%, Brown Sugar 100K + 2,000 sugar +3%, Caramel 1M + 5,000 sugar + 5,000 milk +3%, Macadamia 10M + 2,500 eggs + 20,000 sugar +4%, Hazelnut 20M + 50,000 flour + 2,000 chocolate +4%, Chocolate Chips 30M + 4,000 chocolate +5%. The table below is the original idea.
 
 | Recipe | Cost | CPS bonus | Ingredients |
 |---|---|---|---|
@@ -435,8 +439,9 @@ Storage in SQLite or MySQL. Autosave regularly and on logout.
 
 ## Differences from the current build
 Maintained by the orchestrator. Each line is resolved by a future feature (then removed here).
-- **Buildings (4.2, 4.3):** all 11 buildings and the milestones are built (building-roster, 1.2.0), with tuned values (e.g. Wheat Field 15 / 0.15, Baker's Apprentice 75 / 1). Unlocks use cookies baked instead of expansions until plot expansions exist. The shipped id for building 7 is still `beehive`; the Ingredient Farm feature renames it to the Chicken Farm (`chicken_farm`, with a save migration).
+- **Buildings (4.2, 4.3):** all 11 buildings and the milestones are built (building-roster, 1.2.0), with tuned values (e.g. Wheat Field 15 / 0.15, Baker's Apprentice 75 / 1). Unlocks use cookies baked instead of expansions until plot expansions exist. Building 7 is the Chicken Farm (`chicken_farm`, renamed from `beehive` with a save migration in ingredients, 1.5.0).
 - **Plots are client-side (1, 3):** plots are admin-placed shared locations where every player sees only their own progress. There are no private per-player regions, so **visitor mode** is on hold.
 - **Plot size (3.1, 5):** `factory-makeover` ships a fixed 31×30 fenced plot with a 19×14 factory; this document starts at 11×11 and grows to 35×35 through expansions. → a `plot-expansions` feature has to reconcile the factory size with the starter plot (smaller starter factory, or a bigger starter plot).
 - **Shop (4.7):** the buildings and click upgrades are bought on in-world hologram panels and an upgrade shelf, not a chest GUI. The first chest GUI comes with the Recipe Book.
-- **Ingredient Farm and recipes (3.3, 4.5), golden cookies (4.6), prestige (6), cosmetics (7), offline progress (8):** not built yet. Click upgrades (4.4) are built (upgrade-holograms).
+- **Ingredient Farm (3.3):** on hold; ingredients and recipes (4.5) are built without a farm location (ingredients, 1.5.0). No bonus harvest or ripe spots.
+- **Golden cookies (4.6), prestige (6), cosmetics (7), offline progress (8):** not built yet. Click upgrades (4.4) are built (upgrade-holograms).
